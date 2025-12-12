@@ -1,14 +1,7 @@
 from .user import User
 from .note import Note
 
-
 class UserNote:
-    """
-    id - Уникальный идентификатор записи.
-    user - Объект User.
-    note - Объект Note.
-    """
-
     def __init__(self, user: User, note: Note, un_id: int):
         self.user = user
         self.note = note

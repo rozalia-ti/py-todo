@@ -68,21 +68,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for task in tasks %}
+                        {% for note in notes %}
                         <tr>
-                            <td>{{ task['title'] }}</td>
-                            <td>{{ task['description'] }}</td>
-                            <td>{{ task['created'] }}</td>
-                            <td>{{ task['updated'] }}</td>
+                            <td>{{ note.title }}</td>
+                            <td>{{ note.discription }}</td>
+                            <td>{{ note.data_create }}</td>
+                            <td>{{ note.data_update }}</td>
                             <td>
-                                {% if task['tags'] %}
-                                    {% for tag in task['tags'].split(',') %}
+                                {% if note.tags %}
+                                    {% for tag in note.tags.split(',') %}
                                         <span class="badge-custom">{{ tag.strip() }}</span>
                                     {% endfor %}
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="/delete/{{ task['id'] }}" class="btn btn-custom btn-sm">Delete</a>
+                                <a href="/delete/{{ note.id }}" class="btn btn-custom btn-sm">Delete</a>
                             </td>
                         </tr>
                         {% endfor %}

@@ -1,17 +1,9 @@
 class User:
-    """
-    id - Уникальный идентификатор
-    name - Имя пользователя
-    email - Почта
-    password - Пароль
-    """
-
     def __init__(self, user_id: int, name: str, email: str, password: str):
         self.id = user_id
         self.name = name
         self.email = email
         self.password = password
-
 
     @property
     def id(self):
@@ -47,7 +39,7 @@ class User:
             raise TypeError("Почта задается строкой.")
         if len(email_val.strip()) < 1:
             raise ValueError('Почта не может быть пустой.')
-        self._name = email_val.strip()
+        self._email = email_val.strip()
 
     @property
     def password(self):
@@ -61,4 +53,4 @@ class User:
             raise ValueError('Пароль не может быть пустой.')
         if len(password_val) < 4:
             raise ValueError('Пароль должен состоять не менее, чем из 4 символов.')
-        self._name = password_val.strip()
+        self._password = password_val.strip()
