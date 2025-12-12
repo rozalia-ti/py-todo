@@ -3,10 +3,10 @@ import sqlite3
 
 app = Flask(__name__)
 
-# Initialize database
 def init_db():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
+    # Создаем таблицу, если она еще не существует
     c.execute('''CREATE TABLE IF NOT EXISTS users 
                  (id INTEGER PRIMARY KEY, name TEXT, email TEXT)''')
     conn.commit()
@@ -14,14 +14,17 @@ def init_db():
 
 @app.route('/')
 def home():
-    # Add sample data
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute("INSERT OR IGNORE INTO users (name, email) VALUES (?, ?)", 
-              ('John Doe', 'john@example.com'))
+    c.execute("INSERT OR IGNORE INTO users (id, name, email) VALUES (?, ?, ?)", 
+              (1, 'John Doe', 'john@example.com'))
+    
+    # Добавим вторую запись для демонстрации полосатой таблицы
+    c.execute("INSERT OR IGNORE INTO users (id, name, email) VALUES (?, ?, ?)", 
+              (2, 'Jane Smith', 'jane@example.com'))
+    
     conn.commit()
     
-    # Fetch data
     c.execute("SELECT * FROM users")
     users = c.fetchall()
     conn.close()
