@@ -10,7 +10,6 @@ def index():
     from models import User, Note
     # Получаем статистику для главной страницы
     stats = db.session.query(User.username, func.count(Note.id)).outerjoin(Note).group_by(User.id).all()
-    # ВАЖНО: Мы возвращаем ФАЙЛ, а не текст
     return render_template('index.html', stats=stats)
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -87,3 +86,54 @@ def delete_note(note_id):
     db.session.commit()
     flash('Заметка удалена.')
     return redirect(url_for('main.dashboard'))
+
+@main.route('/note/<int:note_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_note(note_id):
+    from models import Note
+    from forms import NoteForm
+    # Находим заметку или выдаем 404, если её нет
+    note = Note.query.get_or_404(note_id)
+    
+    # Проверка прав доступа
+    if note.author != current_user:
+        flash('Вы не можете редактировать чужие заметки!')
+        return redirect(url_for('main.dashboard'))
+    
+    form = NoteForm()
+    
+    # Если форма отправлена (POST), обновляем данные
+    if form.validate_on_submit():
+        note.title = form.title.data
+        note.body = form.body.data
+        note.tags = form.tags.data
+        db.session.commit()
+        flash('Заметка обновлена!')
+        return redirect(url_for('main.dashboard'))
+    
+    # Если это просто переход по ссылке (GET), заполняем форму текущими данными
+    elif request.method == 'GET':
+        form.title.data = note.title
+        form.body.data = note.body
+        form.tags.data = note.tags
+        
+    return render_template('create_note.html', form=form, title='Редактирование заметки')
+
+@main.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Вы вышли из системы.')
+    return redirect(url_for('main.index'))
+
+@main.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        if new_password:
+            current_user.set_password(new_password)
+            db.session.commit()
+            flash('Пароль успешно изменен!', 'success')
+            return redirect(url_for('main.profile'))
+    return render_template('profile.html')

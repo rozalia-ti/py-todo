@@ -4,7 +4,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'user' # Явное имя таблицы
+    __tablename__ = 'user' 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -20,13 +20,12 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 class Note(db.Model):
-    __tablename__ = 'note' # Явное имя таблицы
+    __tablename__ = 'note' 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
     body = db.Column(db.Text, nullable=False)
     tags = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # ВОТ ЭТО ПОЛЕ ОЧЕНЬ ВАЖНО (внешний ключ)
+    # внешний ключ
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

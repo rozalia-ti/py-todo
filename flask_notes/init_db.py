@@ -1,4 +1,3 @@
-# init_db.py
 from app import app
 from extensions import db
 from models import User, Note # Импортируем, чтобы SQLAlchemy их увидел
