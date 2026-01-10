@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h2>Мои заметки</h2>
+    </div>
+    <div class="col-md-6">
+        <form action="{{ url_for('main.dashboard') }}" method="GET" class="d-flex">
+            <input class="form-control me-2" type="search" name="q" placeholder="Поиск по тексту или тегу..." aria-label="Search" value="{{ request.args.get('q', '') }}">
+            <button class="btn btn-outline-primary" type="submit">Найти</button>
+            {% if request.args.get('q') %}
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary ms-2">Сброс</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for note in notes %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm hover-card">
+            <div class="card-body">
+                <h5 class="card-title text-primary">{{ note.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted small">
+                    {{ note.created_at.strftime('%d.%m.%Y %H:%M') }}
+                </h6>
+                <p class="card-text">{{ note.body|truncate(100) }}</p>
+                
+                <div class="mb-3">
+                    {% if note.tags %}
+                        {% for tag in note.tags.split(',') %}
+                            <span class="badge bg-info text-dark">{{ tag.strip() }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+             </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <h4 class="text-muted">Заметок не найдено 🕸️</h4>
+        <a href="{{ url_for('main.create_note') }}" class="btn btn-primary mt-3">Создать первую заметку</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

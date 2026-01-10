@@ -1,0 +1,12 @@
+/* Эффект при наведении на карточку заметки */
+.hover-card {
+    transition: transform 0.2s;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+}
+
+body {
+    background-color: #f8f9fa; /* Светло-серый фон */
+}
